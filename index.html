@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Apuestas Deportivas</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+padding:40px;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+background:#1e293b;
+padding:40px;
+border-radius:10px;
+}
+
+h1{
+font-size:36px;
+}
+
+p{
+color:#cbd5e1;
+}
+
+.whatsapp-btn{
+
+display:inline-block;
+margin-top:30px;
+padding:18px 35px;
+background:#25D366;
+color:white;
+font-size:20px;
+font-weight:bold;
+border-radius:8px;
+text-decoration:none;
+opacity:0.5;
+pointer-events:none;
+transition:0.3s;
+
+}
+
+.whatsapp-btn.active{
+opacity:1;
+pointer-events:auto;
+}
+
+.timer{
+margin-top:20px;
+font-size:18px;
+color:#94a3b8;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📊 Cajero de Apuestas Deportivas</h1>
+
+<p>
+Recibe números y pronósticos deportivos diariamente.
+</p>
+
+<p>
+Para continuar debes esperar unos segundos antes de acceder al WhatsApp.
+</p>
+
+<div class="timer">
+Habilitando acceso en <span id="count">8</span> segundos...
+</div>
+
+<a id="whatsapp"
+class="whatsapp-btn"
+href="https://wa.me/59177105135"
+target="_blank">
+💬 HABLAR POR WHATSAPP
+</a>
+
+</div>
+
+<script>
+
+let tiempo = 8;
+
+let contador = document.getElementById("count");
+
+let boton = document.getElementById("whatsapp");
+
+let intervalo = setInterval(function(){
+
+tiempo--;
+
+contador.innerText = tiempo;
+
+if(tiempo <= 0){
+
+clearInterval(intervalo);
+
+contador.innerText = "Listo";
+
+boton.classList.add("active");
+
+}
+
+},1000);
+
+</script>
+
+</body>
+</html>
