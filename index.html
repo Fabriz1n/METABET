@@ -1,120 +1,612 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Apuestas Deportivas</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cajero de Apuestas • Recargas</title>
 
-<style>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#101a33;
+      --text:#eaf0ff;
+      --muted:#aab7da;
+      --accent:#25D366;
+      --accent2:#3b82f6;
+      --danger:#ef4444;
+      --radius:18px;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1000px 600px at 15% 10%, #18254a 0%, transparent 60%),
+        radial-gradient(900px 500px at 85% 15%, #1a3a64 0%, transparent 55%),
+        var(--bg);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
 
-body{
-font-family: Arial;
-background:#0f172a;
-color:white;
-text-align:center;
-padding:40px;
-}
+    /* Fondo animado suave */
+    .glow{
+      position:fixed; inset:-200px;
+      background: radial-gradient(circle at 20% 20%, rgba(59,130,246,.20), transparent 40%),
+                  radial-gradient(circle at 80% 25%, rgba(37,211,102,.15), transparent 45%),
+                  radial-gradient(circle at 60% 80%, rgba(99,102,241,.12), transparent 45%);
+      filter: blur(30px);
+      z-index:-1;
+      animation: float 10s ease-in-out infinite alternate;
+    }
+    @keyframes float{
+      from{transform:translate3d(0,0,0) scale(1)}
+      to{transform:translate3d(20px, -20px, 0) scale(1.03)}
+    }
 
-.container{
-max-width:700px;
-margin:auto;
-background:#1e293b;
-padding:40px;
-border-radius:10px;
-}
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:28px 18px 90px;
+    }
 
-h1{
-font-size:36px;
-}
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:20px;
+    }
 
-p{
-color:#cbd5e1;
-}
+    .brand{
+      display:flex; gap:12px; align-items:center;
+    }
+    .logo{
+      width:46px; height:46px;
+      border-radius:14px;
+      background: linear-gradient(135deg, rgba(59,130,246,.9), rgba(37,211,102,.8));
+      box-shadow: 0 12px 26px rgba(59,130,246,.25);
+    }
+    .brand h2{margin:0; font-size:16px; letter-spacing:.2px}
+    .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
 
-.whatsapp-btn{
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:#cfe1ff;
+      font-weight:700;
+      font-size:12px;
+      white-space:nowrap;
+    }
 
-display:inline-block;
-margin-top:30px;
-padding:18px 35px;
-background:#25D366;
-color:white;
-font-size:20px;
-font-weight:bold;
-border-radius:8px;
-text-decoration:none;
-opacity:0.5;
-pointer-events:none;
-transition:0.3s;
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+    }
+    @media(max-width:950px){ .grid{grid-template-columns:1fr;} }
 
-}
+    .card{
+      background: rgba(16,26,51,.55);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
 
-.whatsapp-btn.active{
-opacity:1;
-pointer-events:auto;
-}
+    .hero{
+      padding:22px;
+      position:relative;
+    }
 
-.timer{
-margin-top:20px;
-font-size:18px;
-color:#94a3b8;
-}
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(59,130,246,.18);
+      border:1px solid rgba(59,130,246,.35);
+      color:#cfe1ff;
+      font-weight:800;
+      font-size:12px;
+      margin-bottom:12px;
+    }
 
-</style>
+    h1{
+      margin:0 0 10px;
+      font-size:34px;
+      line-height:1.05;
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.45;
+      max-width:56ch;
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:10px;
+      margin-top:14px;
+    }
+    @media(max-width:520px){ .kpis{grid-template-columns:1fr;} }
+    .kpi{
+      padding:12px;
+      border-radius:16px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.08);
+      text-align:left;
+    }
+    .kpi b{display:block; font-size:18px; margin-bottom:2px}
+    .kpi span{color:var(--muted); font-size:12px}
+
+    /* Carrusel */
+    .slider{
+      margin-top:18px;
+      border-radius:16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.20);
+      position:relative;
+      height:260px;
+    }
+    .slide{
+      position:absolute; inset:0;
+      opacity:0;
+      transform:scale(1.02);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .slide.active{
+      opacity:1;
+      transform:scale(1);
+    }
+    .slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter:saturate(1.05) contrast(1.05);
+    }
+    .slide::after{
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.65));
+    }
+    .slideText{
+      position:absolute;
+      left:16px; right:16px; bottom:16px;
+      z-index:2;
+    }
+    .slideText h3{margin:0 0 4px; font-size:18px}
+    .slideText p{margin:0; color:rgba(255,255,255,.78); font-size:13px}
+
+    /* Panel derecho */
+    .panel{
+      padding:18px;
+    }
+    .panel h3{margin:0 0 6px; font-size:18px}
+    .panel p{margin:0 0 12px; color:var(--muted); font-size:13px; line-height:1.45}
+
+    .form{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+    label{
+      font-size:12px;
+      color:#cbd6f5;
+      margin-bottom:4px;
+      display:block;
+    }
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      outline:none;
+    }
+    textarea{min-height:76px; resize:vertical}
+    .row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media(max-width:520px){ .row{grid-template-columns:1fr;} }
+
+    .check{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      margin-top:6px;
+    }
+    .check input{width:18px; height:18px; margin-top:2px}
+    .check small{display:block; color:var(--muted); margin-top:4px}
+
+    .actions{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .btn{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      border:0;
+      padding:14px 14px;
+      border-radius:16px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      transition: transform .15s ease, opacity .2s ease;
+      user-select:none;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btnMain{
+      background:var(--accent);
+      color:#053016;
+      box-shadow: 0 16px 40px rgba(37,211,102,.25);
+      opacity:.55;
+      pointer-events:none;
+    }
+    .btnMain.active{
+      opacity:1;
+      pointer-events:auto;
+    }
+    .btnAlt{
+      background:transparent;
+      color:#dbe7ff;
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .timer{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      margin-top:4px;
+    }
+    .status{
+      text-align:center;
+      font-size:12px;
+      color:rgba(255,255,255,.75);
+    }
+
+    /* Botón flotante */
+    .floatWA{
+      position:fixed;
+      right:16px;
+      bottom:16px;
+      background:var(--accent);
+      color:#053016;
+      border-radius:999px;
+      padding:12px 14px;
+      font-weight:900;
+      text-decoration:none;
+      box-shadow: 0 16px 42px rgba(37,211,102,.30);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      z-index:10;
+      opacity:.6;
+      pointer-events:none;
+      transform: translateY(6px);
+      transition: .25s ease;
+    }
+    .floatWA.active{
+      opacity:1;
+      pointer-events:auto;
+      transform: translateY(0);
+    }
+    .mini{
+      font-size:11px;
+      color:rgba(0,0,0,.55);
+      font-weight:800;
+      display:block;
+      margin-top:2px;
+    }
+
+    .note{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(59,130,246,.25);
+      background: rgba(59,130,246,.10);
+      color:#dbe7ff;
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .footer{
+      margin-top:12px;
+      text-align:center;
+      color:rgba(255,255,255,.55);
+      font-size:11px;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="glow"></div>
 
-<div class="container">
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h2>Cajero Deportivo</h2>
+          <p>Recargas • Soporte • Atención rápida</p>
+        </div>
+      </div>
 
-<h1>📊 Cajero de Apuestas Deportivas</h1>
+      <div class="pill">🔒 Anti-bot • Botón con retraso</div>
+    </header>
 
-<p>
-Recibe números y pronósticos deportivos diariamente.
-</p>
+    <div class="grid">
+      <!-- HERO -->
+      <section class="card hero">
+        <div class="badge">⚡ Recarga rápida por WhatsApp</div>
+        <h1>Recargas y soporte<br/>en minutos</h1>
+        <p class="sub">
+          Atención directa por WhatsApp. Completa los datos, acepta el contacto y el botón se habilita
+          tras un breve conteo para filtrar mensajes automáticos.
+        </p>
 
-<p>
-Para continuar debes esperar unos segundos antes de acceder al WhatsApp.
-</p>
+        <div class="kpis">
+          <div class="kpi"><b>+18</b><span>Si aplica, solo mayores</span></div>
+          <div class="kpi"><b>Directo</b><span>Sin intermediarios</span></div>
+          <div class="kpi"><b>Seguro</b><span>Solo con consentimiento</span></div>
+        </div>
 
-<div class="timer">
-Habilitando acceso en <span id="count">8</span> segundos...
-</div>
+        <!-- Slider de imágenes -->
+        <div class="slider" aria-label="Galería">
+          <div class="slide active">
+            <img src="img/slide1.jpg" alt="Recargas rápidas">
+            <div class="slideText">
+              <h3>Recargas rápidas</h3>
+              <p>Escríbenos y te guiamos en el proceso.</p>
+            </div>
+          </div>
 
-<a id="whatsapp"
-class="whatsapp-btn"
-href="https://wa.me/59177105135"
-target="_blank">
-💬 HABLAR POR WHATSAPP
-</a>
+          <div class="slide">
+            <img src="img/slide2.jpg" alt="Soporte por WhatsApp">
+            <div class="slideText">
+              <h3>Soporte por WhatsApp</h3>
+              <p>Consulta, verificación y atención personalizada.</p>
+            </div>
+          </div>
 
-</div>
+          <div class="slide">
+            <img src="img/slide3.jpg" alt="Atención confiable">
+            <div class="slideText">
+              <h3>Atención confiable</h3>
+              <p>Reduce bots y números desconocidos con verificación.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          Tip: coloca tus imágenes en <b>img/slide1.jpg</b>, <b>img/slide2.jpg</b>, <b>img/slide3.jpg</b>
+        </div>
+      </section>
+
+      <!-- PANEL DERECHO -->
+      <aside class="card panel">
+        <h3>Solicita tu recarga</h3>
+        <p>Completa lo básico. El botón se habilita al final del conteo.</p>
+
+        <div class="form">
+          <div class="row">
+            <div>
+              <label for="name">Nombre</label>
+              <input id="name" placeholder="Ej: Waldo" autocomplete="name" />
+            </div>
+            <div>
+              <label for="amount">Monto (Bs)</label>
+              <input id="amount" placeholder="Ej: 50" inputmode="numeric" />
+            </div>
+          </div>
+
+          <div>
+            <label for="phone">Tu WhatsApp (opcional)</label>
+            <input id="phone" placeholder="Ej: 5917XXXXXXX" inputmode="numeric" />
+          </div>
+
+          <div>
+            <label for="note">Detalle / Plataforma (opcional)</label>
+            <textarea id="note" placeholder="Ej: Recarga para X plataforma, hoy."></textarea>
+          </div>
+
+          <div class="check">
+            <input id="consent" type="checkbox" />
+            <div>
+              <div><b>Acepto</b> ser contactado por WhatsApp para esta solicitud.</div>
+              <small>Esto ayuda a filtrar spam y bots.</small>
+            </div>
+          </div>
+
+          <div class="check">
+            <input id="age" type="checkbox" />
+            <div>
+              <div>Confirmo ser <b>mayor de 18 años</b> (si aplica).</div>
+              <small>Si no necesitas +18, dime y lo quitamos.</small>
+            </div>
+          </div>
+
+          <div class="actions">
+            <a id="waBtn" class="btn btnMain" href="#" target="_blank" rel="noopener">
+              💬 Hablame por WhatsApp
+            </a>
+
+            <button class="btn btnAlt" id="copyBtn" type="button">
+              📋 Copiar mensaje
+            </button>
+
+            <div class="timer">
+              Habilitando en <b><span id="count">8</span>s</b>…
+            </div>
+            <div class="status" id="status">
+              Completa y marca las casillas para habilitar.
+            </div>
+          </div>
+
+          <div class="note">
+            ✅ Mensaje predeterminado listo. Puedes cambiarlo en el código (variable <b>MENSAJE_BASE</b>).
+          </div>
+
+          <div class="footer">
+            Política de privacidad • Términos • Juego responsable
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Botón flotante (se habilita al mismo tiempo que el principal) -->
+  <a id="waFloat" class="floatWA" href="#" target="_blank" rel="noopener">
+    💬 WhatsApp
+    <span class="mini">recarga rápida</span>
+  </a>
 
 <script>
+  // =========================
+  // CONFIG
+  // =========================
+  const DESTINO_WHATSAPP = "59177105135"; // Tu número (solo dígitos)
+  const MENSAJE_BASE = "Hola, vengo por una recarga.";
 
-let tiempo = 8;
+  // Tiempo de bloqueo inicial (anti-bot simple)
+  let seconds = 8;
+  let timerDone = false;
 
-let contador = document.getElementById("count");
+  // =========================
+  // Elements
+  // =========================
+  const countEl = document.getElementById("count");
+  const statusEl = document.getElementById("status");
+  const waBtn = document.getElementById("waBtn");
+  const waFloat = document.getElementById("waFloat");
+  const copyBtn = document.getElementById("copyBtn");
 
-let boton = document.getElementById("whatsapp");
+  const nameEl = document.getElementById("name");
+  const amountEl = document.getElementById("amount");
+  const phoneEl = document.getElementById("phone");
+  const noteEl = document.getElementById("note");
+  const consentEl = document.getElementById("consent");
+  const ageEl = document.getElementById("age");
 
-let intervalo = setInterval(function(){
+  function cleanDigits(v){ return (v || "").replace(/\D/g, ""); }
 
-tiempo--;
+  function buildMessage(){
+    const name = nameEl.value.trim();
+    const amount = amountEl.value.trim();
+    const phone = cleanDigits(phoneEl.value);
+    const note = noteEl.value.trim();
 
-contador.innerText = tiempo;
+    // Mensaje predeterminado + datos opcionales
+    let msg = `${MENSAJE_BASE}`;
+    if (amount) msg += ` Quiero recargar ${amount} Bs.`;
+    if (name) msg += ` Mi nombre es ${name}.`;
+    if (phone) msg += ` Mi número es ${phone}.`;
+    if (note) msg += ` Detalle: ${note}`;
+    return msg;
+  }
 
-if(tiempo <= 0){
+  function canEnable(){
+    const nameOk = nameEl.value.trim().length >= 2;
+    const amountOk = amountEl.value.trim().length >= 1; // puedes exigir mínimo
+    const consentOk = consentEl.checked;
+    const ageOk = ageEl.checked; // si no quieres +18, quítalo
+    return timerDone && nameOk && amountOk && consentOk && ageOk;
+  }
 
-clearInterval(intervalo);
+  function setWhatsAppLinks(){
+    const text = buildMessage();
+    const url = `https://wa.me/${DESTINO_WHATSAPP}?text=${encodeURIComponent(text)}`;
+    waBtn.href = url;
+    waFloat.href = url;
+  }
 
-contador.innerText = "Listo";
+  function refresh(){
+    setWhatsAppLinks();
 
-boton.classList.add("active");
+    if (!timerDone){
+      countEl.textContent = String(seconds);
+      statusEl.textContent = "Espera el conteo y completa los datos.";
+      waBtn.classList.remove("active");
+      waFloat.classList.remove("active");
+      return;
+    }
 
-}
+    if (canEnable()){
+      statusEl.textContent = "Listo ✅ Ya puedes abrir WhatsApp con el mensaje predeterminado.";
+      waBtn.classList.add("active");
+      waFloat.classList.add("active");
+    } else {
+      statusEl.textContent = "Falta completar nombre/monto o marcar casillas.";
+      waBtn.classList.remove("active");
+      waFloat.classList.remove("active");
+    }
+  }
 
-},1000);
+  // =========================
+  // Timer
+  // =========================
+  const interval = setInterval(() => {
+    seconds--;
+    if (seconds <= 0){
+      timerDone = true;
+      clearInterval(interval);
+      countEl.textContent = "0";
+    }
+    refresh();
+  }, 1000);
 
+  // =========================
+  // Events
+  // =========================
+  [nameEl, amountEl, phoneEl, noteEl, consentEl, ageEl].forEach(el=>{
+    el.addEventListener("input", refresh);
+    el.addEventListener("change", refresh);
+  });
+
+  // Copiar mensaje
+  copyBtn.addEventListener("click", async () => {
+    const text = buildMessage();
+    try{
+      await navigator.clipboard.writeText(text);
+      statusEl.textContent = "Mensaje copiado ✅ Pégalo en WhatsApp si quieres.";
+    } catch(e){
+      statusEl.textContent = "No se pudo copiar automáticamente (permiso del navegador).";
+      alert(text);
+    }
+  });
+
+  // Slider simple
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  let s = 0;
+  setInterval(() => {
+    slides[s].classList.remove("active");
+    s = (s + 1) % slides.length;
+    slides[s].classList.add("active");
+  }, 3500);
+
+  refresh();
 </script>
-
 </body>
 </html>
